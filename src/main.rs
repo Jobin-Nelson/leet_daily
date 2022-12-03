@@ -14,7 +14,7 @@ async fn main() -> Result<(), reqwest::Error> {
 
     let (current_date, daily_qn_link) = get_daily_qn_link().await?;
 
-    open_link_in_browser(&daily_qn_link);
+    // open_link_in_browser(&daily_qn_link);
 
     let file_path = create_file_path(&daily_qn_link);
 
@@ -70,13 +70,18 @@ fn open_link_in_browser(daily_qn_link: &String) -> () {
 }
 
 fn create_file_path(daily_qn_link: &String) -> PathBuf {
-    let month = chrono::Utc::now()
+    let now = chrono::Utc::now();
+
+    let year = now.format("%Y").to_string();
+
+    let month = now
         .format("%B")
         .to_string()
         .to_ascii_lowercase();
 
     let mut file_path: PathBuf = [
         "/home/jobin/playground/learn/competitive_programming",
+        &year,
         &month,
     ]
     .iter()
