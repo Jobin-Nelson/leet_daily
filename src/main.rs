@@ -14,9 +14,11 @@ async fn main() -> Result<(), reqwest::Error> {
 
     let (current_date, daily_qn_link) = get_daily_qn_link().await?;
 
-    // open_link_in_browser(&daily_qn_link);
-
     let file_path = create_file_path(&daily_qn_link);
+
+    if !args.browser {
+        open_link_in_browser(&daily_qn_link);
+    }
 
     if !args.file {
         create_file(&file_path, &current_date, &daily_qn_link);
@@ -61,7 +63,7 @@ async fn get_daily_qn_link() -> Result<(String, String), reqwest::Error> {
 }
 
 fn open_link_in_browser(daily_qn_link: &String) -> () {
-    Command::new("brave-browser")
+    Command::new("brave")
         .arg(daily_qn_link)
         .stdout(Stdio::null())
         .stderr(Stdio::null())
