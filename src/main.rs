@@ -82,12 +82,13 @@ fn create_file_path(daily_qn_link: &String) -> PathBuf {
         .to_ascii_lowercase();
 
     let mut file_path: PathBuf = [
-        "/home/jobin/playground/learn/competitive_programming",
+        "/home/jobin/playground/projects/learn/competitive_programming",
         &year,
         &month,
     ]
     .iter()
     .collect();
+
     fs::create_dir_all(file_path.as_path()).expect("Could not create directory");
     let file_name = Path::new(daily_qn_link).file_name().unwrap();
     file_path.push(file_name);
