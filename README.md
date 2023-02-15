@@ -11,15 +11,6 @@ Opens today's question in brave browser, opens new file in neovim and populates 
 1. Clone the repo to anywhere in your system
     - `git clone --depth 1 https://github.com/Jobin-Nelson/leet_daily.git`
 
-2. cd into leet_daily, and build the binary
-    - `cargo build --release`
-
-3. move the binary to somewhere in your `$PATH` variable, for me it is `$HOME/script/`
-    - `mv target/release/leet_daily ~/script/`
-
-## Dependencies
-
-- **reqwest**
-- **clap**
-- **serde**
+1. Install leet_daily
+    - `cd leet_daily && cargo install --path .`
 

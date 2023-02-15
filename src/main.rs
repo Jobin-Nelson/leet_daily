@@ -63,7 +63,7 @@ async fn get_daily_qn_link() -> Result<(String, String), reqwest::Error> {
 }
 
 fn open_link_in_browser(daily_qn_link: &String) -> () {
-    Command::new("brave")
+    Command::new("firefox")
         .arg(daily_qn_link)
         .stdout(Stdio::null())
         .stderr(Stdio::null())
