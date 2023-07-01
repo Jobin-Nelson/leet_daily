@@ -61,8 +61,20 @@ pub fn create_file_path(daily_qn_link: &String) -> PathBuf {
     file_path
 }
 
-pub fn fetch_content(daily_qn_link: &String) -> Option<String> {
-    todo!();
+pub fn fetch_content(daily_qn_link: &String) -> Result<String, reqwest::Error> {
+    let response = reqwest::blocking::get(daily_qn_link)?.text()?;
+    println!("{:#?}", response);
+    let html_document = scraper::Html::parse_document(&response);
+    let head_selector = scraper::Selector::parse("head").unwrap();
+    let content_selector = scraper::Selector::parse(r#"[data-track-load="description_content"]"#).unwrap();
+    let head_element = html_document.select(&head_selector).next().unwrap();
+    let meta_element = html_document.select(&content_selector).next().unwrap();
+    // for el in html_document.select(&content_selector) {
+    //     println!("{:#?}", el);
+    //     println!("\n END OF CONTENT \n")
+    // }
+    let content_value = meta_element.value().attr("content").unwrap().to_string();
+    Ok(content_value)
 }
 
 pub fn create_file(file_path: &PathBuf, current_date: &String, daily_qn_link: &String) -> () {
@@ -71,11 +83,16 @@ pub fn create_file(file_path: &PathBuf, current_date: &String, daily_qn_link: &S
         return ();
     }
 
+    let question_body = match fetch_content(daily_qn_link) {
+        Ok(question_body) => question_body,
+        Err(_) => String::from(""),
+    };
+
     let content = format!(
         "\
 '''
 Created Date: {}
-Qn:
+Qn: {}
 Link: {}
 Notes:
 '''
@@ -84,7 +101,7 @@ def main():
 
 if __name__ == '__main__':
 ",
-        current_date, daily_qn_link
+        current_date, question_body, daily_qn_link
     );
 
     let mut f = fs::File::create(file_path).unwrap();
