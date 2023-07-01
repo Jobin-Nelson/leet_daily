@@ -4,7 +4,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
-pub async fn get_daily_qn_link() -> Result<(String, String), reqwest::Error> {
+pub fn get_daily_qn_link() -> Result<(String, String), reqwest::Error> {
     let query_url = "https://leetcode.com/graphql";
 
     let query = HashMap::from([
@@ -12,14 +12,8 @@ pub async fn get_daily_qn_link() -> Result<(String, String), reqwest::Error> {
         ("operationName", "questionOfToday")
     ]);
 
-    let client = reqwest::Client::new();
-    let data: serde_json::Value = client
-        .post(query_url)
-        .json(&query)
-        .send()
-        .await?
-        .json()
-        .await?;
+    let client = reqwest::blocking::Client::new();
+    let data: serde_json::Value = client.post(query_url).json(&query).send()?.json()?;
 
     let base_url = String::from("https://leetcode.com");
 
@@ -65,6 +59,10 @@ pub fn create_file_path(daily_qn_link: &String) -> PathBuf {
     file_path.set_extension("py");
 
     file_path
+}
+
+pub fn fetch_content(daily_qn_link: &String) -> Option<String> {
+    todo!();
 }
 
 pub fn create_file(file_path: &PathBuf, current_date: &String, daily_qn_link: &String) -> () {
