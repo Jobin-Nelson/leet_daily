@@ -49,6 +49,7 @@ async fn get_daily_qn_link() -> Result<(String, String), reqwest::Error> {
         .await?;
 
     let base_url = String::from("https://leetcode.com");
+    println!("{data}");
 
     let current_date = data["data"]["activeDailyCodingChallengeQuestion"]["date"]
         .as_str()
@@ -76,10 +77,7 @@ fn create_file_path(daily_qn_link: &String) -> PathBuf {
 
     let year = now.format("%Y").to_string();
 
-    let month = now
-        .format("%B")
-        .to_string()
-        .to_ascii_lowercase();
+    let month = now.format("%B").to_string().to_ascii_lowercase();
 
     let mut file_path: PathBuf = [
         "/home/jobin/playground/projects/learn/competitive_programming",
